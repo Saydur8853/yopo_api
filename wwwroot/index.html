@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOPO API</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .status-box {
+            background: white;
+            border-radius: 15px;
+            padding: 40px 60px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .status-text {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 0;
+        }
+        
+        .status-ok {
+            color: #28a745;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        
+        .status-ok:hover {
+            color: #1e7e34;
+            transform: scale(1.1);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .api-title {
+            font-size: 32px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+        
+        .subtitle {
+            font-size: 14px;
+            color: #6c757d;
+            margin-top: 15px;
+        }
+
+        .status-healthy {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .status-degraded {
+            color: #ffc107;
+            font-weight: bold;
+        }
+
+        .status-unhealthy {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .status-details {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 12px;
+            text-align: left;
+            max-width: 500px;
+            margin: 20px auto 0;
+            overflow-x: auto;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .refresh-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .refresh-button:hover {
+            background: #0056b3;
+        }
+
+        .loading {
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        .swagger-button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .swagger-button:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .button-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="status-box">
+        <h1 class="api-title">YOPO API</h1>
+        <p id="api-status" class="status-text loading">Checking status...</p>
+        <div id="error-message" class="error-message" style="display: none;"></div>
+        <div class="button-container">
+            <button id="refresh-button" class="refresh-button" onclick="fetchApiStatus()" style="display: none;">Refresh Status</button>
+            <a href="/swagger/index.html" class="swagger-button" target="_blank">📚 API Documentation</a>
+        </div>
+        <p class="subtitle">Detailed API health information:</p>
+        <pre id="status-details" class="status-details"></pre>
+    </div>
+    <script>
+        async function fetchApiStatus() {
+            const statusElement = document.getElementById('api-status');
+            const errorElement = document.getElementById('error-message');
+            const refreshButton = document.getElementById('refresh-button');
+            const statusDetails = document.getElementById('status-details');
+
+            try {
+                statusElement.className = 'status-text loading';
+                statusElement.textContent = 'Checking status...';
+                errorElement.style.display = 'none';
+                refreshButton.style.display = 'none';
+
+                const response = await fetch('/api/status');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+
+                // Update status based on API response
+                statusElement.className = 'status-text';
+                let statusClass = 'status-healthy';
+                
+                if (result.status === 'Healthy') {
+                    statusClass = 'status-healthy';
+                } else if (result.status === 'Degraded') {
+                    statusClass = 'status-degraded';
+                } else {
+                    statusClass = 'status-unhealthy';
+                }
+
+                statusElement.innerHTML = `API Status: <span class="${statusClass}">${result.status}</span>`;
+                
+                // Display detailed information
+                const displayData = {
+                    status: result.status,
+                    timestamp: new Date(result.timestamp).toLocaleString(),
+                    environment: result.environment,
+                    databaseStatus: result.databaseStatus,
+                    memoryUsage: result.memoryUsage,
+                    uptime: formatUptime(result.uptime),
+                    responseTime: `${result.responseTime} ms`,
+                    version: result.version,
+                    apiName: result.apiName
+                };
+
+                statusDetails.textContent = JSON.stringify(displayData, null, 2);
+                
+            } catch (error) {
+                console.error('Error fetching API status:', error);
+                statusElement.className = 'status-text';
+                statusElement.innerHTML = 'API Status: <span class="status-unhealthy">Error</span>';
+                errorElement.textContent = `Failed to fetch status: ${error.message}`;
+                errorElement.style.display = 'block';
+                refreshButton.style.display = 'inline-block';
+                statusDetails.textContent = 'Unable to retrieve status details.';
+            }
+        }
+
+        function formatUptime(uptimeString) {
+            // Parse the uptime string and format it nicely
+            const match = uptimeString.match(/(\d+)\.(\d+):(\d+):(\d+)\./);
+            if (match) {
+                const [, days, hours, minutes, seconds] = match;
+                return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            }
+            return uptimeString;
+        }
+
+        // Initial load
+        fetchApiStatus();
+
+        // Auto-refresh every 30 seconds
+        setInterval(fetchApiStatus, 30000);
+    </script>
+</body>
+</html>

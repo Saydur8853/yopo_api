@@ -1,0 +1,362 @@
+{
+  "Version": 1,
+  "Hash": "7yEgeCIP5ZYRpDOxLSiPyF56n+JBnt3TjKhiPdalRCk=",
+  "Source": "YopoAPI",
+  "BasePath": "_content/YopoAPI",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "YopoAPI\\wwwroot",
+      "Source": "YopoAPI",
+      "ContentRoot": "C:\\Users\\Saydur\\Desktop\\yopo_api\\wwwroot\\",
+      "BasePath": "_content/YopoAPI",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\Saydur\\Desktop\\yopo_api\\obj\\Debug\\net9.0\\compressed\\5oc2hz7uwh-ythcbsp5ak.gz",
+      "SourceId": "YopoAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Saydur\\Desktop\\yopo_api\\obj\\Debug\\net9.0\\compressed\\",
+      "BasePath": "_content/YopoAPI",
+      "RelativePath": "index#[.{fingerprint=ythcbsp5ak}]?.html.gz",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Alternative",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "C:\\Users\\Saydur\\Desktop\\yopo_api\\wwwroot\\index.html",
+      "AssetTraitName": "Content-Encoding",
+      "AssetTraitValue": "gzip",
+      "Fingerprint": "hy1ajvnj6f",
+      "Integrity": "aSezDdEOxp176F9fw0AJAMm6Vm9f340AtU4DO7NIn08=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "C:\\Users\\Saydur\\Desktop\\yopo_api\\wwwroot\\index.html"
+    },
+    {
+      "Identity": "C:\\Users\\Saydur\\Desktop\\yopo_api\\wwwroot\\index.html",
+      "SourceId": "YopoAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Saydur\\Desktop\\yopo_api\\wwwroot\\",
+      "BasePath": "_content/YopoAPI",
+      "RelativePath": "index#[.{fingerprint}]?.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "ythcbsp5ak",
+      "Integrity": "um+pyDQZy/fHPUpLYu793aTf9gOhulxoceexBKg9Yjw=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\index.html"
+    }
+  ],
+  "Endpoints": [
+    {
+      "Route": "index.html",
+      "AssetFile": "C:\\Users\\Saydur\\Desktop\\yopo_api\\obj\\Debug\\net9.0\\compressed\\5oc2hz7uwh-ythcbsp5ak.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.000484730974"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2062"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"aSezDdEOxp176F9fw0AJAMm6Vm9f340AtU4DO7NIn08=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 13 Jul 2025 22:45:12 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"um+pyDQZy/fHPUpLYu793aTf9gOhulxoceexBKg9Yjw=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-um+pyDQZy/fHPUpLYu793aTf9gOhulxoceexBKg9Yjw="
+        }
+      ]
+    },
+    {
+      "Route": "index.html",
+      "AssetFile": "C:\\Users\\Saydur\\Desktop\\yopo_api\\wwwroot\\index.html",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "7702"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"um+pyDQZy/fHPUpLYu793aTf9gOhulxoceexBKg9Yjw=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 13 Jul 2025 22:45:12 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-um+pyDQZy/fHPUpLYu793aTf9gOhulxoceexBKg9Yjw="
+        }
+      ]
+    },
+    {
+      "Route": "index.html.gz",
+      "AssetFile": "C:\\Users\\Saydur\\Desktop\\yopo_api\\obj\\Debug\\net9.0\\compressed\\5oc2hz7uwh-ythcbsp5ak.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2062"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"aSezDdEOxp176F9fw0AJAMm6Vm9f340AtU4DO7NIn08=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 13 Jul 2025 22:45:12 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-aSezDdEOxp176F9fw0AJAMm6Vm9f340AtU4DO7NIn08="
+        }
+      ]
+    },
+    {
+      "Route": "index.ythcbsp5ak.html",
+      "AssetFile": "C:\\Users\\Saydur\\Desktop\\yopo_api\\obj\\Debug\\net9.0\\compressed\\5oc2hz7uwh-ythcbsp5ak.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.000484730974"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2062"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"aSezDdEOxp176F9fw0AJAMm6Vm9f340AtU4DO7NIn08=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 13 Jul 2025 22:45:12 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"um+pyDQZy/fHPUpLYu793aTf9gOhulxoceexBKg9Yjw=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "ythcbsp5ak"
+        },
+        {
+          "Name": "label",
+          "Value": "index.html"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-um+pyDQZy/fHPUpLYu793aTf9gOhulxoceexBKg9Yjw="
+        }
+      ]
+    },
+    {
+      "Route": "index.ythcbsp5ak.html",
+      "AssetFile": "C:\\Users\\Saydur\\Desktop\\yopo_api\\wwwroot\\index.html",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "7702"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"um+pyDQZy/fHPUpLYu793aTf9gOhulxoceexBKg9Yjw=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 13 Jul 2025 22:45:12 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "ythcbsp5ak"
+        },
+        {
+          "Name": "label",
+          "Value": "index.html"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-um+pyDQZy/fHPUpLYu793aTf9gOhulxoceexBKg9Yjw="
+        }
+      ]
+    },
+    {
+      "Route": "index.ythcbsp5ak.html.gz",
+      "AssetFile": "C:\\Users\\Saydur\\Desktop\\yopo_api\\obj\\Debug\\net9.0\\compressed\\5oc2hz7uwh-ythcbsp5ak.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2062"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"aSezDdEOxp176F9fw0AJAMm6Vm9f340AtU4DO7NIn08=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 13 Jul 2025 22:45:12 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "ythcbsp5ak"
+        },
+        {
+          "Name": "label",
+          "Value": "index.html.gz"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-aSezDdEOxp176F9fw0AJAMm6Vm9f340AtU4DO7NIn08="
+        }
+      ]
+    }
+  ]
+}
