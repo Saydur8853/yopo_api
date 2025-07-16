@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("YopoAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ec660c4bbe06441435f2f8ebb6d3967c86122402")]
 [assembly: System.Reflection.AssemblyProductAttribute("YopoAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("YopoAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

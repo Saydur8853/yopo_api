@@ -4,13 +4,13 @@
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\index.html'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
       <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-um\u002BpyDQZy/fHPUpLYu793aTf9gOhulxoceexBKg9Yjw="}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"7702"},{"Name":"Content-Type","Value":"text/html"},{"Name":"ETag","Value":"\u0022um\u002BpyDQZy/fHPUpLYu793aTf9gOhulxoceexBKg9Yjw=\u0022"},{"Name":"Last-Modified","Value":"Sun, 13 Jul 2025 22:45:12 GMT"}]]]></ResponseHeaders>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"7702"},{"Name":"Content-Type","Value":"text/html"},{"Name":"ETag","Value":"\u0022um\u002BpyDQZy/fHPUpLYu793aTf9gOhulxoceexBKg9Yjw=\u0022"},{"Name":"Last-Modified","Value":"Wed, 16 Jul 2025 05:48:14 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/YopoAPI/index.ythcbsp5ak.html">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\index.html'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
       <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"ythcbsp5ak"},{"Name":"integrity","Value":"sha256-um\u002BpyDQZy/fHPUpLYu793aTf9gOhulxoceexBKg9Yjw="},{"Name":"label","Value":"_content/YopoAPI/index.html"}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"7702"},{"Name":"Content-Type","Value":"text/html"},{"Name":"ETag","Value":"\u0022um\u002BpyDQZy/fHPUpLYu793aTf9gOhulxoceexBKg9Yjw=\u0022"},{"Name":"Last-Modified","Value":"Sun, 13 Jul 2025 22:45:12 GMT"}]]]></ResponseHeaders>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"7702"},{"Name":"Content-Type","Value":"text/html"},{"Name":"ETag","Value":"\u0022um\u002BpyDQZy/fHPUpLYu793aTf9gOhulxoceexBKg9Yjw=\u0022"},{"Name":"Last-Modified","Value":"Wed, 16 Jul 2025 05:48:14 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
   </ItemGroup>
 </Project>
