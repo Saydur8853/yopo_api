@@ -3,7 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using YopoAPI.Data;
-using YopoAPI.Services;
+using YopoAPI.Modules.Authentication.Services;
+using YopoAPI.Modules.UserManagement.Services;
+using YopoAPI.Modules.RoleManagement.Services;
+using YopoAPI.Modules.PolicyManagement.Services;
 using YopoAPI.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -110,4 +113,5 @@ app.MapGet("/", async context =>
 app.MapControllers();
 
 app.Run();
+
 

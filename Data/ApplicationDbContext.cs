@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using YopoAPI.Models;
+using YopoAPI.Modules.Authentication.Models;
+using YopoAPI.Modules.UserManagement.Models;
+using YopoAPI.Modules.RoleManagement.Models;
+using YopoAPI.Modules.PolicyManagement.Models;
 
 namespace YopoAPI.Data
 {
@@ -151,4 +154,5 @@ namespace YopoAPI.Data
         }
     }
 }
+
 

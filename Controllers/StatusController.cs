@@ -124,3 +124,4 @@ namespace YopoAPI.Controllers
         public Dictionary<string, string> Checks { get; set; } = new();
     }
 }
+
