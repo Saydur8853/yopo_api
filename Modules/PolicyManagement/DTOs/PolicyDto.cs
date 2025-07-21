@@ -29,6 +29,10 @@ namespace YopoAPI.Modules.PolicyManagement.DTOs
     public class UpdatePolicyDto
     {
         [Required]
+        [StringLength(50)]
+        public string Type { get; set; } = string.Empty;
+
+        [Required]
         public string Content { get; set; } = string.Empty;
 
         [StringLength(20)]
