@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Net.NetworkInformation;
+using System.Data.Common;
 using YopoAPI.Data;
 
 namespace YopoAPI.Controllers
@@ -11,10 +12,12 @@ namespace YopoAPI.Controllers
     public class StatusController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IConfiguration _configuration;
 
-        public StatusController(ApplicationDbContext context)
+        public StatusController(ApplicationDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -31,6 +34,8 @@ namespace YopoAPI.Controllers
             {
                 // Check database connectivity
                 await _context.Database.OpenConnectionAsync();
+                var connection = _context.Database.GetDbConnection();
+                status.DatabaseName = connection.Database;
                 await _context.Database.CloseConnectionAsync();
                 status.DatabaseStatus = "Connected";
             }
@@ -38,6 +43,22 @@ namespace YopoAPI.Controllers
             {
                 status.DatabaseStatus = $"Error: {ex.Message}";
                 status.Status = "Degraded";
+                // Try to get database name from connection string even if connection fails
+                try
+                {
+                    var connectionString = _configuration.GetConnectionString("DefaultConnection");
+                    if (connectionString != null && connectionString.Contains("Database="))
+                    {
+                        var dbNameStart = connectionString.IndexOf("Database=") + "Database=".Length;
+                        var dbNameEnd = connectionString.IndexOf(";", dbNameStart);
+                        if (dbNameEnd == -1) dbNameEnd = connectionString.Length;
+                        status.DatabaseName = connectionString.Substring(dbNameStart, dbNameEnd - dbNameStart);
+                    }
+                }
+                catch
+                {
+                    status.DatabaseName = "Unknown";
+                }
             }
 
             // Check system metrics
@@ -109,6 +130,7 @@ namespace YopoAPI.Controllers
         public DateTime Timestamp { get; set; }
         public string Environment { get; set; } = "";
         public string DatabaseStatus { get; set; } = "";
+        public string DatabaseName { get; set; } = "";
         public string MemoryUsage { get; set; } = "";
         public TimeSpan Uptime { get; set; }
         public long ResponseTime { get; set; }

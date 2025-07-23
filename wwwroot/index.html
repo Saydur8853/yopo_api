@@ -6,106 +6,125 @@
     <title>YOPO API</title>
     <style>
         body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
         }
-        
-        .status-box {
-            background: white;
-            border-radius: 15px;
-            padding: 40px 60px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+
+        .container {
             text-align: center;
-            border: 1px solid #e0e0e0;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-width: 800px;
+            margin: 20px;
         }
-        
-        .status-text {
-            font-size: 24px;
-            color: #333;
-            margin-bottom: 0;
-        }
-        
-        .status-ok {
-            color: #28a745;
+
+        .message-box {
+            background: #e8f5e8;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 18px;
             font-weight: bold;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.3s ease;
+            color: #2d5a2d;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .api-endpoints {
+            text-align: left;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .endpoint {
+            margin: 10px 0;
+            padding: 8px;
+            background: #e9ecef;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .method {
             display: inline-block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            color: white;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 12px;
         }
-        
-        .status-ok:hover {
-            color: #1e7e34;
-            transform: scale(1.1);
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        
-        .api-title {
-            font-size: 32px;
-            color: #2c3e50;
-            margin-bottom: 20px;
-            font-weight: 300;
-        }
-        
-        .subtitle {
-            font-size: 14px;
+
+        .get { background-color: #28a745; }
+        .post { background-color: #007bff; }
+        .put { background-color: #ffc107; color: #000; }
+        .delete { background-color: #dc3545; }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
             color: #6c757d;
-            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .health-status {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 5px solid #28a745;
+        }
+
+        .health-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .health-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-indicator {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
         }
 
         .status-healthy {
-            color: #28a745;
-            font-weight: bold;
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
         }
 
         .status-degraded {
-            color: #ffc107;
-            font-weight: bold;
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
         }
 
         .status-unhealthy {
-            color: #dc3545;
-            font-weight: bold;
-        }
-
-        .status-details {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 5px;
-            padding: 15px;
-            margin-top: 20px;
-            font-size: 12px;
-            text-align: left;
-            max-width: 500px;
-            margin: 20px auto 0;
-            overflow-x: auto;
-        }
-
-        .error-message {
-            color: #dc3545;
-            font-size: 16px;
-            margin-top: 10px;
-        }
-
-        .refresh-button {
-            background: #007bff;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 15px;
-            font-size: 14px;
-        }
-
-        .refresh-button:hover {
-            background: #0056b3;
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
 
         .loading {
@@ -113,120 +132,211 @@
             font-style: italic;
         }
 
-        .swagger-button {
-            background: #28a745;
+        .refresh-btn {
+            background: #007bff;
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
+            padding: 8px 16px;
+            border-radius: 5px;
             cursor: pointer;
-            margin-top: 20px;
-            font-size: 16px;
-            font-weight: bold;
-            text-decoration: none;
-            display: inline-block;
-            transition: all 0.3s ease;
+            font-size: 14px;
+            margin-top: 10px;
         }
 
-        .swagger-button:hover {
-            background: #218838;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        .refresh-btn:hover {
+            background: #0056b3;
         }
 
-        .button-container {
-            margin-top: 20px;
+        .last-updated {
+            font-size: 12px;
+            color: #6c757d;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="status-box">
-        <h1 class="api-title">YOPO API</h1>
-        <p id="api-status" class="status-text loading">Checking status...</p>
-        <div id="error-message" class="error-message" style="display: none;"></div>
-        <div class="button-container">
-            <button id="refresh-button" class="refresh-button" onclick="fetchApiStatus()" style="display: none;">Refresh Status</button>
-            <a href="/swagger/index.html" class="swagger-button" target="_blank">📚 API Documentation</a>
+    <div class="container">
+        <h1>YOPO API</h1>
+        
+        <div class="message-box">
+            ⚠️ This is the YOPO API project
         </div>
-        <p class="subtitle">Detailed API health information:</p>
-        <pre id="status-details" class="status-details"></pre>
+
+        <p>Welcome to the YOPO API! This application is designed to demonstrate a modular API structure.</p>
+
+        <div style="margin: 20px 0; padding: 15px; background: #d1ecf1; border: 1px solid #bee5eb; border-radius: 8px;">
+            <h3 style="margin: 0 0 10px 0; color: #0c5460;">📋 API Documentation</h3>
+            <p style="margin: 5px 0;">🔗 <a href="/swagger" style="color: #007bff; text-decoration: none; font-weight: bold;">View Swagger API Documentation</a></p>
+        </div>
+
+        <div class="health-status">
+            <h3>🔍 API Health Status</h3>
+            <div id="healthContainer">
+                <div class="health-item">
+                    <span>Overall Status:</span>
+                    <span id="overallStatus" class="status-indicator loading">Loading...</span>
+                </div>
+                <div class="health-item">
+                    <span>Database:</span>
+                    <span id="databaseStatus" class="status-indicator loading">Loading...</span>
+                </div>
+                <div class="health-item">
+                    <span>Database Name:</span>
+                    <span id="databaseName" class="loading">Loading...</span>
+                </div>
+                <div class="health-item">
+                    <span>API Response:</span>
+                    <span id="apiStatus" class="status-indicator loading">Loading...</span>
+                </div>
+                <div class="health-item">
+                    <span>Memory Usage:</span>
+                    <span id="memoryUsage" class="loading">Loading...</span>
+                </div>
+                <div class="health-item">
+                    <span>Uptime:</span>
+                    <span id="uptime" class="loading">Loading...</span>
+                </div>
+                <div class="health-item">
+                    <span>Response Time:</span>
+                    <span id="responseTime" class="loading">Loading...</span>
+                </div>
+            </div>
+            <button class="refresh-btn" onclick="checkApiHealth()">🔄 Refresh Status</button>
+            <div class="last-updated" id="lastUpdated">Last updated: Never</div>
+        </div>
+
+
+        <div class="footer">
+            <p>🌐 Environment: [Environment]</p>
+            <p>⏰ Server Time: [Time]</p>
+            <p>💻 Ready for deployment!</p>
+        </div>
     </div>
+
     <script>
-        async function fetchApiStatus() {
-            const statusElement = document.getElementById('api-status');
-            const errorElement = document.getElementById('error-message');
-            const refreshButton = document.getElementById('refresh-button');
-            const statusDetails = document.getElementById('status-details');
+        // Function to get status indicator class based on status
+        function getStatusClass(status) {
+            if (status.toLowerCase().includes('healthy') || status.toLowerCase().includes('connected')) {
+                return 'status-healthy';
+            } else if (status.toLowerCase().includes('degraded')) {
+                return 'status-degraded';
+            } else if (status.toLowerCase().includes('error') || status.toLowerCase().includes('unhealthy')) {
+                return 'status-unhealthy';
+            }
+            return 'loading';
+        }
 
-            try {
-                statusElement.className = 'status-text loading';
-                statusElement.textContent = 'Checking status...';
-                errorElement.style.display = 'none';
-                refreshButton.style.display = 'none';
-
-                const response = await fetch('/api/status');
+        // Function to format uptime
+        function formatUptime(uptime) {
+            // Uptime comes as "HH:mm:ss.fff" format from TimeSpan
+            if (uptime && uptime.includes(':')) {
+                const parts = uptime.split(':');
+                const hours = parseInt(parts[0]);
+                const minutes = parseInt(parts[1]);
+                const seconds = parseInt(parts[2].split('.')[0]);
                 
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-
-                const result = await response.json();
-
-                // Update status based on API response
-                statusElement.className = 'status-text';
-                let statusClass = 'status-healthy';
-                
-                if (result.status === 'Healthy') {
-                    statusClass = 'status-healthy';
-                } else if (result.status === 'Degraded') {
-                    statusClass = 'status-degraded';
+                if (hours > 0) {
+                    return `${hours}h ${minutes}m ${seconds}s`;
+                } else if (minutes > 0) {
+                    return `${minutes}m ${seconds}s`;
                 } else {
-                    statusClass = 'status-unhealthy';
+                    return `${seconds}s`;
                 }
+            }
+            return uptime;
+        }
 
-                statusElement.innerHTML = `API Status: <span class="${statusClass}">${result.status}</span>`;
+        // Function to check API health
+        async function checkApiHealth() {
+            try {
+                // Show loading state
+                document.getElementById('overallStatus').textContent = 'Loading...';
+                document.getElementById('overallStatus').className = 'status-indicator loading';
                 
-                // Display detailed information
-                const displayData = {
-                    status: result.status,
-                    timestamp: new Date(result.timestamp).toLocaleString(),
-                    environment: result.environment,
-                    databaseStatus: result.databaseStatus,
-                    memoryUsage: result.memoryUsage,
-                    uptime: formatUptime(result.uptime),
-                    responseTime: `${result.responseTime} ms`,
-                    version: result.version,
-                    apiName: result.apiName
-                };
-
-                statusDetails.textContent = JSON.stringify(displayData, null, 2);
+                // Fetch status data
+                const statusResponse = await fetch('/api/status');
+                const statusData = await statusResponse.json();
+                
+                // Fetch health data
+                const healthResponse = await fetch('/api/status/health');
+                const healthData = await healthResponse.json();
+                
+                // Update overall status
+                const overallElement = document.getElementById('overallStatus');
+                overallElement.textContent = statusData.status || 'Unknown';
+                overallElement.className = 'status-indicator ' + getStatusClass(statusData.status);
+                
+                // Update database status
+                const dbElement = document.getElementById('databaseStatus');
+                dbElement.textContent = statusData.databaseStatus || 'Unknown';
+                dbElement.className = 'status-indicator ' + getStatusClass(statusData.databaseStatus);
+                
+                // Update database name
+                document.getElementById('databaseName').textContent = statusData.databaseName || 'Unknown';
+                document.getElementById('databaseName').className = '';
+                
+                // Update API status from health check
+                const apiElement = document.getElementById('apiStatus');
+                const apiHealthStatus = healthData.checks && healthData.checks.API ? healthData.checks.API : 'Unknown';
+                apiElement.textContent = apiHealthStatus;
+                apiElement.className = 'status-indicator ' + getStatusClass(apiHealthStatus);
+                
+                // Update memory usage
+                document.getElementById('memoryUsage').textContent = statusData.memoryUsage || 'Unknown';
+                document.getElementById('memoryUsage').className = '';
+                
+                // Update uptime
+                const uptimeElement = document.getElementById('uptime');
+                uptimeElement.textContent = formatUptime(statusData.uptime) || 'Unknown';
+                uptimeElement.className = '';
+                
+                // Update response time
+                const responseTimeElement = document.getElementById('responseTime');
+                responseTimeElement.textContent = statusData.responseTime ? statusData.responseTime + ' ms' : 'Unknown';
+                responseTimeElement.className = '';
+                
+                // Update border color based on overall status
+                const healthStatusDiv = document.querySelector('.health-status');
+                if (statusData.status && statusData.status.toLowerCase() === 'healthy') {
+                    healthStatusDiv.style.borderLeftColor = '#28a745';
+                } else if (statusData.status && statusData.status.toLowerCase() === 'degraded') {
+                    healthStatusDiv.style.borderLeftColor = '#ffc107';
+                } else {
+                    healthStatusDiv.style.borderLeftColor = '#dc3545';
+                }
+                
+                // Update last updated time
+                document.getElementById('lastUpdated').textContent = 'Last updated: ' + new Date().toLocaleString();
                 
             } catch (error) {
-                console.error('Error fetching API status:', error);
-                statusElement.className = 'status-text';
-                statusElement.innerHTML = 'API Status: <span class="status-unhealthy">Error</span>';
-                errorElement.textContent = `Failed to fetch status: ${error.message}`;
-                errorElement.style.display = 'block';
-                refreshButton.style.display = 'inline-block';
-                statusDetails.textContent = 'Unable to retrieve status details.';
+                console.error('Error fetching API health:', error);
+                
+                // Show error state
+                document.getElementById('overallStatus').textContent = 'Error';
+                document.getElementById('overallStatus').className = 'status-indicator status-unhealthy';
+                document.getElementById('databaseStatus').textContent = 'Error';
+                document.getElementById('databaseStatus').className = 'status-indicator status-unhealthy';
+                document.getElementById('apiStatus').textContent = 'Error';
+                document.getElementById('apiStatus').className = 'status-indicator status-unhealthy';
+                
+                document.getElementById('databaseName').textContent = 'Unable to fetch';
+                document.getElementById('memoryUsage').textContent = 'Unable to fetch';
+                document.getElementById('uptime').textContent = 'Unable to fetch';
+                document.getElementById('responseTime').textContent = 'Unable to fetch';
+                
+                // Update border color to red
+                document.querySelector('.health-status').style.borderLeftColor = '#dc3545';
+                
+                document.getElementById('lastUpdated').textContent = 'Last updated: Error at ' + new Date().toLocaleString();
             }
         }
-
-        function formatUptime(uptimeString) {
-            // Parse the uptime string and format it nicely
-            const match = uptimeString.match(/(\d+)\.(\d+):(\d+):(\d+)\./);
-            if (match) {
-                const [, days, hours, minutes, seconds] = match;
-                return `${days}d ${hours}h ${minutes}m ${seconds}s`;
-            }
-            return uptimeString;
-        }
-
-        // Initial load
-        fetchApiStatus();
 
         // Auto-refresh every 30 seconds
-        setInterval(fetchApiStatus, 30000);
+        setInterval(checkApiHealth, 30000);
+        
+        // Initial load
+        document.addEventListener('DOMContentLoaded', checkApiHealth);
     </script>
 </body>
 </html>
+
