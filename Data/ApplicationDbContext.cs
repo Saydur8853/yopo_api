@@ -12,6 +12,56 @@ namespace YopoAPI.Data
         {
         }
 
+        public override int SaveChanges()
+        {
+            UpdateTimestamps();
+            return base.SaveChanges();
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            UpdateTimestamps();
+            return base.SaveChangesAsync(cancellationToken);
+        }
+
+        private void UpdateTimestamps()
+        {
+            var entries = ChangeTracker.Entries()
+                .Where(e => e.Entity.GetType().GetProperties()
+                    .Any(p => p.Name == "CreatedAt" || p.Name == "UpdatedAt" || p.Name == "AssignedAt"))
+                .ToList();
+
+            foreach (var entry in entries)
+            {
+                var now = DateTime.UtcNow;
+                var entityType = entry.Entity.GetType();
+
+                if (entry.State == EntityState.Added)
+                {
+                    var createdAtProperty = entityType.GetProperty("CreatedAt");
+                    if (createdAtProperty != null)
+                    {
+                        createdAtProperty.SetValue(entry.Entity, now);
+                    }
+
+                    var assignedAtProperty = entityType.GetProperty("AssignedAt");
+                    if (assignedAtProperty != null)
+                    {
+                        assignedAtProperty.SetValue(entry.Entity, now);
+                    }
+                }
+
+                if (entry.State == EntityState.Added || entry.State == EntityState.Modified)
+                {
+                    var updatedAtProperty = entityType.GetProperty("UpdatedAt");
+                    if (updatedAtProperty != null)
+                    {
+                        updatedAtProperty.SetValue(entry.Entity, now);
+                    }
+                }
+            }
+        }
+
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Invitation> Invitations { get; set; }
@@ -35,8 +85,7 @@ namespace YopoAPI.Data
                 entity.Property(u => u.Email).HasMaxLength(255);
                 entity.Property(u => u.PhoneNumber).HasMaxLength(20);
                 entity.Property(u => u.PasswordHash).HasMaxLength(255);
-                entity.Property(u => u.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
-                entity.Property(u => u.UpdatedAt).HasDefaultValueSql("GETUTCDATE()");
+                // CreatedAt and UpdatedAt will be set in application code
 
                 // Configure relationship with Role
                 entity.HasOne(u => u.Role)
@@ -52,7 +101,7 @@ namespace YopoAPI.Data
                 entity.HasIndex(r => r.Name).IsUnique();
                 entity.Property(r => r.Name).HasMaxLength(50);
                 entity.Property(r => r.Description).HasMaxLength(200);
-                entity.Property(r => r.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+                // CreatedAt will be set in application code
 
                 // Configure self-referencing relationship for hierarchy
                 entity.HasOne(r => r.ParentRole)
@@ -67,7 +116,7 @@ namespace YopoAPI.Data
                 entity.HasKey(i => i.Id);
                 entity.Property(i => i.Email).HasMaxLength(255);
                 entity.Property(i => i.PhoneNumber).HasMaxLength(20);
-                entity.Property(i => i.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+                // CreatedAt will be set in application code
 
                 entity.HasOne(i => i.InvitedBy)
                       .WithMany()
@@ -87,14 +136,14 @@ namespace YopoAPI.Data
                 entity.Property(p => p.Name).HasMaxLength(100);
                 entity.Property(p => p.Description).HasMaxLength(200);
                 entity.Property(p => p.Category).HasMaxLength(50);
-                entity.Property(p => p.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+                // CreatedAt will be set in application code
             });
 
             // Configure RolePrivilege entity
             modelBuilder.Entity<RolePrivilege>(entity =>
             {
                 entity.HasKey(rp => rp.Id);
-                entity.Property(rp => rp.AssignedAt).HasDefaultValueSql("GETUTCDATE()");
+                // AssignedAt will be set in application code
 
                 entity.HasOne(rp => rp.Role)
                       .WithMany(r => r.RolePrivileges)
@@ -113,7 +162,7 @@ namespace YopoAPI.Data
                 entity.HasKey(prt => prt.Id);
                 entity.Property(prt => prt.Email).HasMaxLength(255);
                 entity.Property(prt => prt.Token).HasMaxLength(6);
-                entity.Property(prt => prt.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+                // CreatedAt will be set in application code
             });
 
             // Configure Policy entity
@@ -122,8 +171,7 @@ namespace YopoAPI.Data
                 entity.HasKey(p => p.Id);
                 entity.Property(p => p.Type).HasMaxLength(50);
                 entity.Property(p => p.Version).HasMaxLength(20);
-                entity.Property(p => p.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
-                entity.Property(p => p.UpdatedAt).HasDefaultValueSql("GETUTCDATE()");
+                // CreatedAt and UpdatedAt will be set in application code
             });
 
             // Seed initial roles

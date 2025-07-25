@@ -12,8 +12,23 @@ using YopoAPI.Middleware;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+// Handle Elastic Beanstalk environment variables for database connection
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+// Replace environment variable placeholders if they exist
+if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("RDS_HOSTNAME")))
+{
+    connectionString = $"Server={Environment.GetEnvironmentVariable("RDS_HOSTNAME")};"
+                    + $"Database={Environment.GetEnvironmentVariable("RDS_DB_NAME")};"
+                    + $"User={Environment.GetEnvironmentVariable("RDS_USERNAME")};"
+                    + $"Password={Environment.GetEnvironmentVariable("RDS_PASSWORD")};"
+                    + $"Port={Environment.GetEnvironmentVariable("RDS_PORT")};"
+                    + "SslMode=Required;";
+}
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseMySql(connectionString, 
+        ServerVersion.AutoDetect(connectionString)));
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
@@ -84,15 +99,14 @@ builder.Services.AddSwaggerGen(c =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// Enable Swagger in all environments (including production)
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "YOPO API v1");
-        c.DocumentTitle = "YOPO API Documentation";
-    });
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "YOPO API v1");
+    c.DocumentTitle = "YOPO API Documentation";
+    c.RoutePrefix = "swagger"; // Set Swagger UI at /swagger
+});
 
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
