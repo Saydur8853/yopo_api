@@ -98,6 +98,24 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
+// Apply pending migrations automatically
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    try
+    {
+        // Check if database exists and apply pending migrations
+        context.Database.Migrate();
+        Console.WriteLine("Database migrations applied successfully.");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error applying migrations: {ex.Message}");
+        // Log the error but don't stop the application
+        // You might want to implement proper logging here
+    }
+}
+
 // Configure the HTTP request pipeline.
 // Enable Swagger in all environments (including production)
 app.UseSwagger();
