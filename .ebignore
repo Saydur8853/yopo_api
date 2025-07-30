@@ -1,0 +1,15 @@
+# Files to exclude from Elastic Beanstalk deployment
+# (but .env will be included since it's not listed here)
+
+# Git files
+.git/
+.gitignore
+
+# Development files
+*.md
+README.md
+
+# IDE files
+.vs/
+.vscode/
+*.user

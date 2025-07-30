@@ -12,9 +12,20 @@ using YopoAPI.Middleware;
 using DotNetEnv;
 
 // Load environment variables from .env file if it exists
-if (File.Exists(".env"))
+var envPath = Path.Combine(Directory.GetCurrentDirectory(), ".env");
+if (File.Exists(envPath))
 {
-    Env.Load();
+    Env.Load(envPath);
+}
+
+// Check for required environment variables
+if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID")))
+{
+    Console.WriteLine("Warning: GOOGLE_CLIENT_ID environment variable not set. Google OAuth will not work.");
+}
+if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET")))
+{
+    Console.WriteLine("Warning: GOOGLE_CLIENT_SECRET environment variable not set. Google OAuth will not work.");
 }
 
 var builder = WebApplication.CreateBuilder(args);
