@@ -394,6 +394,10 @@ namespace YopoAPI.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
+                    b.Property<string>("ProfilePicture")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 

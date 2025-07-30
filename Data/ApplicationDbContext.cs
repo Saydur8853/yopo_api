@@ -84,6 +84,7 @@ namespace YopoAPI.Data
                 entity.Property(u => u.LastName).HasMaxLength(100);
                 entity.Property(u => u.Email).HasMaxLength(255);
                 entity.Property(u => u.PhoneNumber).HasMaxLength(20);
+                entity.Property(u => u.ProfilePicture).HasMaxLength(500);
                 entity.Property(u => u.PasswordHash).HasMaxLength(255);
                 // CreatedAt and UpdatedAt will be set in application code
 

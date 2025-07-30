@@ -24,13 +24,14 @@ namespace YopoAPI.Modules.UserManagement.Services
         Task<bool> ChangePasswordAsync(int userId, ChangePasswordDto changePasswordDto);
         Task<User?> ValidateUserAsync(string email, string password);
         Task<User?> ValidateUserByEmailOrPhoneAsync(string emailOrPhone, string password);
-        Task<UserDto> CreateUserWithInvitationAsync(SignupDto signupDto, Invitation invitation);
         Task<bool> IsFirstUserAsync();
         Task<bool> AssignRoleToUserAsync(int userId, int roleId);
         Task<bool> RemoveRoleFromUserAsync(int userId);
         Task<bool> UpdateUserStatusAsync(int userId, bool isActive);
         Task<bool> HasRoleAsync(int userId, string roleName);
         Task<bool> ResetPasswordAsync(string email, string newPassword);
+        Task<User?> GetActiveUserByEmailAsync(string email);
+        Task<UserDto> CreateUserWithInvitationAsync(SignupDto signupDto, Invitation invitation, string? profilePictureUrl = null);
     }
 
     public class UserService : IUserService
@@ -75,6 +76,7 @@ namespace YopoAPI.Modules.UserManagement.Services
                 LastName = user.LastName,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
+                ProfilePicture = user.ProfilePicture,
                 FullName = user.FullName,
                 IsActive = user.IsActive,
                 IsSuperAdmin = user.IsSuperAdmin,
@@ -105,6 +107,7 @@ namespace YopoAPI.Modules.UserManagement.Services
                 LastName = user.LastName,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
+                ProfilePicture = user.ProfilePicture,
                 FullName = user.FullName,
                 IsActive = user.IsActive,
                 IsSuperAdmin = user.IsSuperAdmin,
@@ -148,6 +151,7 @@ namespace YopoAPI.Modules.UserManagement.Services
             user.FirstName = updateUserDto.FirstName;
             user.LastName = updateUserDto.LastName;
             user.Email = updateUserDto.Email;
+            user.ProfilePicture = updateUserDto.ProfilePicture;
             user.RoleId = updateUserDto.RoleId;
             user.IsActive = updateUserDto.IsActive;
             user.UpdatedAt = DateTime.UtcNow;
@@ -210,7 +214,7 @@ namespace YopoAPI.Modules.UserManagement.Services
             return user;
         }
 
-        public async Task<UserDto> CreateUserWithInvitationAsync(SignupDto signupDto, Invitation invitation)
+        public async Task<UserDto> CreateUserWithInvitationAsync(SignupDto signupDto, Invitation invitation, string? profilePictureUrl = null)
         {
             // Check if this is the first user (should be Super Admin)
             var isFirstUser = await IsFirstUserAsync();
@@ -227,7 +231,8 @@ namespace YopoAPI.Modules.UserManagement.Services
                 IsSuperAdmin = isFirstUser,
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
+                UpdatedAt = DateTime.UtcNow,
+                ProfilePicture = profilePictureUrl
             };
 
             _context.Users.Add(user);
@@ -294,6 +299,13 @@ namespace YopoAPI.Modules.UserManagement.Services
 
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<User?> GetActiveUserByEmailAsync(string email)
+        {
+            return await _context.Users
+                .Include(u => u.Role)
+                .FirstOrDefaultAsync(u => u.Email == email && u.IsActive);
         }
     }
 }

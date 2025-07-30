@@ -10,6 +10,7 @@ namespace YopoAPI.Modules.UserManagement.DTOs
         public string LastName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string? PhoneNumber { get; set; }
+        public string? ProfilePicture { get; set; }
         public string FullName { get; set; } = string.Empty;
         public bool IsActive { get; set; }
         public bool IsSuperAdmin { get; set; }
@@ -56,6 +57,9 @@ namespace YopoAPI.Modules.UserManagement.DTOs
         [EmailAddress]
         [StringLength(255)]
         public string Email { get; set; } = string.Empty;
+
+        [StringLength(500)]
+        public string? ProfilePicture { get; set; }
 
         [Required]
         public int RoleId { get; set; }

@@ -25,6 +25,9 @@ namespace YopoAPI.Modules.UserManagement.Models
         [StringLength(20)]
         public string? PhoneNumber { get; set; }
 
+        [StringLength(500)]
+        public string? ProfilePicture { get; set; }
+
         [Required]
         [StringLength(255)]
         public string PasswordHash { get; set; } = string.Empty;

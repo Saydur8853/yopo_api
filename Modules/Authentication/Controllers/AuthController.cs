@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 using YopoAPI.Modules.Authentication.DTOs;
 using YopoAPI.Modules.Authentication.Services;
@@ -84,28 +87,32 @@ namespace YopoAPI.Modules.Authentication.Controllers
             if (!string.IsNullOrEmpty(signupDto.Email) && await _userService.UserExistsAsync(signupDto.Email))
                 return BadRequest(new { message = "User with this email already exists" });
 
-            // Check invitation if provided
+            // Check if this is the first user
+            var isFirstUser = await _userService.IsFirstUserAsync();
+            
             Invitation? invitation = null;
-            if (!string.IsNullOrEmpty(signupDto.InvitationToken) && !string.IsNullOrEmpty(signupDto.Email))
+            
+            if (isFirstUser)
             {
-                invitation = await _invitationService.GetValidInvitationAsync(signupDto.Email);
-                if (invitation == null)
-                    return BadRequest(new { message = "Invalid or expired invitation" });
-            }
-            else
-            {
-                // For signup without invitation, create a default invitation (for first user or normal user)
-                var isFirstUser = await _userService.IsFirstUserAsync();
-                var defaultRoleId = isFirstUser ? 1 : 2; // Super Admin for first user, Normal User for others
-                
+                // First user signup - automatically becomes superuser, no invitation needed
                 invitation = new Invitation
                 {
                     Email = signupDto.Email ?? string.Empty,
                     PhoneNumber = signupDto.PhoneNumber,
-                    RoleId = defaultRoleId,
+                    RoleId = 1, // Super Admin role
                     ExpiresAt = DateTime.UtcNow.AddDays(1),
                     IsUsed = false
                 };
+            }
+            else
+            {
+                // For all subsequent users, invitation is required
+                if (string.IsNullOrEmpty(signupDto.Email))
+                    return BadRequest(new { message = "Email is required for invitation-based signup" });
+                    
+                invitation = await _invitationService.GetValidInvitationAsync(signupDto.Email);
+                if (invitation == null)
+                    return BadRequest(new { message = "This email is not invited, please contact Admin" });
             }
 
             var userDto = await _userService.CreateUserWithInvitationAsync(signupDto, invitation);
@@ -192,9 +199,108 @@ namespace YopoAPI.Modules.Authentication.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            // TODO: Implement OAuth validation for Google, Facebook, Apple
-            // For now, this is a placeholder implementation
-            return BadRequest(new { message = "External login not implemented yet" });
+            // TODO: Implement proper OAuth validation here if needed
+
+            var email = externalLoginDto.Email;
+            var firstName = externalLoginDto.FirstName;
+            var lastName = externalLoginDto.LastName;
+            var picture = externalLoginDto.ProviderId; // Assuming ProviderId holds the picture URL
+
+            if (string.IsNullOrEmpty(email))
+            {
+                return BadRequest(new { message = "Email is required for external login" });
+            }
+
+            var existingUser = await _userService.GetUserByEmailAsync(email);
+            if (existingUser != null)
+            {
+                var user = await _userService.GetActiveUserByEmailAsync(email);
+                if (user == null)
+                {
+                    return Unauthorized(new { message = "User account is inactive" });
+                }
+
+                if (!string.IsNullOrEmpty(picture) && user.ProfilePicture != picture)
+                {
+                    user.ProfilePicture = picture;
+                    user.UpdatedAt = DateTime.UtcNow;
+                    await _userService.UpdateUserAsync(user.Id, new UpdateUserDto
+                    {
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        Email = user.Email,
+                        RoleId = user.RoleId,
+                        IsActive = user.IsActive
+                    });
+                }
+
+                var token = _jwtTokenService.GenerateToken(user);
+                var userDto = await _userService.GetUserByIdAsync(user.Id);
+
+                return Ok(new AuthResponseDto
+                {
+                    Token = token,
+                    Expiration = DateTime.UtcNow.AddHours(24),
+                    User = userDto!
+                });
+            }
+            else
+            {
+                var isFirstUser = await _userService.IsFirstUserAsync();
+                Invitation? invitation;
+
+                if (isFirstUser)
+                {
+                    invitation = new Invitation
+                    {
+                        Email = email,
+                        RoleId = 1, // Super Admin
+                        ExpiresAt = DateTime.UtcNow.AddDays(1),
+                        IsUsed = false
+                    };
+                }
+                else
+                {
+                    invitation = await _invitationService.GetValidInvitationAsync(email);
+                    if (invitation == null)
+                    {
+                        return BadRequest(new { message = "This email is not invited, please contact Admin" });
+                    }
+                }
+
+                var signupDto = new SignupDto
+                {
+                    FirstName = firstName ?? "",
+                    LastName = lastName ?? "",
+                    Email = email,
+                    Password = Guid.NewGuid().ToString(),
+                    ConfirmPassword = Guid.NewGuid().ToString()
+                };
+                var tempPassword = Guid.NewGuid().ToString();
+                signupDto.Password = tempPassword;
+                signupDto.ConfirmPassword = tempPassword;
+
+                var userDto = await _userService.CreateUserWithInvitationAsync(signupDto, invitation, picture);
+
+                if (invitation.Id > 0)
+                {
+                    await _invitationService.MarkInvitationAsUsedAsync(invitation.Id);
+                }
+
+                var newUser = await _userService.GetActiveUserByEmailAsync(email);
+                if (newUser == null)
+                {
+                    return BadRequest(new { message = "User creation failed" });
+                }
+
+                var token = _jwtTokenService.GenerateToken(newUser);
+                return Ok(new AuthResponseDto
+                {
+                    Token = token,
+                    Expiration = DateTime.UtcNow.AddHours(24),
+                    User = userDto
+                });
+            }
         }
 
         [HttpPost("refresh-token")]
@@ -255,6 +361,43 @@ namespace YopoAPI.Modules.Authentication.Controllers
 
             return Ok(new { hasRole = hasRole, roleName = roleName });
         }
+
+        [HttpGet("signin-google")]
+        public IActionResult SignInGoogle()
+        {
+            try
+            {
+                Console.WriteLine("=== Starting Custom Google OAuth Flow ===");
+                Console.WriteLine($"Session ID: {HttpContext.Session.Id}");
+                Console.WriteLine($"Request URL: {Request.Scheme}://{Request.Host}{Request.Path}");
+                
+                // Generate a custom state parameter
+                var state = Guid.NewGuid().ToString();
+                HttpContext.Session.SetString("oauth_state", state);
+                
+                // Build Google OAuth URL manually
+                var clientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID") ?? throw new InvalidOperationException("GOOGLE_CLIENT_ID environment variable is not set");
+                var redirectUri = "http://localhost:5260/auth/google/callback";
+                var scope = "openid profile email";
+                
+                var googleAuthUrl = $"https://accounts.google.com/o/oauth2/v2/auth" +
+                    $"?client_id={Uri.EscapeDataString(clientId)}" +
+                    $"&response_type=code" +
+                    $"&scope={Uri.EscapeDataString(scope)}" +
+                    $"&redirect_uri={Uri.EscapeDataString(redirectUri)}" +
+                    $"&state={Uri.EscapeDataString(state)}";
+                
+                Console.WriteLine($"Custom OAuth URL: {googleAuthUrl}");
+                Console.WriteLine($"Generated state: {state}");
+                
+                return Redirect(googleAuthUrl);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error initiating Google OAuth: {ex.Message}");
+                return Redirect($"/?error=oauth_initiation_failed&message={Uri.EscapeDataString(ex.Message)}");
+            }
+        }
+
     }
 }
-
